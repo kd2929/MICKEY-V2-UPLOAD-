@@ -82,7 +82,7 @@ async def download_kalam_video(url, name):
             'Accept: */*',
             'Accept-Encoding: gzip, deflate, br',
             'mobilenumber: aDhYejdQcVIyd0IxazlEZg==',
-            'referer: https://testing-news.kalampublication.in'
+            'referer: https://hello-aws-uat.kalampublication.in'
         ]
         
         header_args = " ".join([f'--add-header "{header}"' for header in headers])
