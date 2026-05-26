@@ -172,7 +172,7 @@ async def account_login(bot: Client, m: Message):
             # Kalam Publication handling
             if "kalampublication" in url:
                 ytf = "best"
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}" --add-header "User-Agent: okhttp/4.12.0" --add-header "mobilenumber: aDhYejdQcVIyd0IxazlEZg==" --add-header "referer: https://testing-news.kalampublication.in"'
+                cmd = f'yt-dlp -o "{name}.mp4" "{url}" --add-header "User-Agent: okhttp/4.12.0" --add-header "mobilenumber: aDhYejdQcVIyd0IxazlEZg==" --add-header "referer: https://hello-aws-uat.kalampublication.in"'
             elif "youtu" in url:
                 ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
             else:
