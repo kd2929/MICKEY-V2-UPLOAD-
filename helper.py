@@ -3,7 +3,6 @@ import subprocess
 import asyncio
 import os
 import time, shutil
-import subprocess
 from Cryptodome.Cipher import AES
 import base64
 from Cryptodome.Util.Padding import unpad
@@ -159,19 +158,18 @@ async def progress_bar(current, total, reply, start_time):
         filled_length = int(20 * current // total)
         bar = '█' * filled_length + '░' * (20 - filled_length)
         
-        # Premium formatted message
+        # Premium formatted progress update with unified boxes
         progress_text = (
-            f"╭─────────────────────╮\n"
-            f"│   📤 **UPLOADING**   │\n"
-            f"╰─────────────────────╯\n\n"
+            f"╭━━━〔 📤 𝙐𝙋𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+            f"┃ 📊 𝙋𝙧𝙤𝙜𝙧𝙚𝙨𝙨 ➠ `{percentage:.1f}%`\n"
+            f"┃ 📦 𝙎𝙞𝙯𝙚 ➠ `{humanbytes(current)}` / `{humanbytes(total)}`\n"
+            f"┃ ⚡ 𝙎𝙥𝙚𝙚𝙙 ➠ `{humanbytes(speed)}/s`\n"
+            f"┃ ⏱️ 𝙀𝙏𝘼 ➠ `{time_formatter(eta)}`\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
             f"┏━━━━━━━━━━━━━━━━━━━━┓\n"
             f"┃ {bar} ┃\n"
             f"┗━━━━━━━━━━━━━━━━━━━━┛\n\n"
-            f"📊 **Progress:** `{percentage:.1f}%`\n"
-            f"📦 **Size:** `{humanbytes(current)}` / `{humanbytes(total)}`\n"
-            f"⚡ **Speed:** `{humanbytes(speed)}/s`\n"
-            f"⏱️ **ETA:** `{time_formatter(eta)}`\n\n"
-            f"🔰 **Premium Upload in Progress** 🔰"
+            f"✨ *Please wait, premium upload is processing...*"
         )
         
         await reply.edit_text(progress_text)
@@ -185,11 +183,14 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
     # Delete progress message immediately
     await prog.delete(True)
     
-    # Send upload message
-    reply = await bot.send_message(
-        channel_id, 
-        f"**🚀 Starting Upload 🚀**\n\n**Name:** `{name}`\n\nPreparing..."
+    # Send styled starting upload message
+    start_upload_prompt = (
+        f"╭━━━〔 🚀 𝙎𝙏𝘼𝙍𝙏𝙄𝙉𝙂 𝙐𝙋𝙇𝙊𝘼𝘿 〕━━━╮\n"
+        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+        f"┃ ⚙️ 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ `Preparing assets...`\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
     )
+    reply = await bot.send_message(channel_id, start_upload_prompt)
     
     # PARALLEL PROCESSING: Generate thumbnail while getting duration
     final_thumb = None
@@ -337,9 +338,16 @@ async def merge_and_send_vid(bot, m, cc, name, prog, path, url, thumb, channel_i
     # Delete progress message
     await prog.delete(True)
     
+    # Premium styled Merge Complete Prompt
+    merge_done_prompt = (
+        f"╭━━━〔 💿 𝙈𝙀𝙍𝙂𝙀 𝘾𝙊𝙈𝙋𝙇𝙀𝙏𝙀 〕━━━╮\n"
+        f"┃ ⚡ *All media elements joined!*\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+    )
+    
     # Use the optimized send function
     await send_vid(bot, m, cc, final_video, thumb, name, 
-                  await bot.send_message(channel_id, "Merging Complete"), 
+                  await bot.send_message(channel_id, merge_done_prompt), 
                   url, channel_id)
 
 # Additional optimization function
