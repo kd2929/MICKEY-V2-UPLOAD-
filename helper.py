@@ -165,10 +165,10 @@ async def progress_bar(current, total, reply, start_time):
             f"┃ 📦 𝙎𝙞𝙯𝙚 ➠ `{humanbytes(current)}` / `{humanbytes(total)}`\n"
             f"┃ ⚡ 𝙎𝙥𝙚𝙚𝙙 ➠ `{humanbytes(speed)}/s`\n"
             f"┃ ⏱️ 𝙀𝙏𝘼 ➠ `{time_formatter(eta)}`\n"
-            f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
-            f"┏━━━━━━━━━━━━━┓\n"
+            f"╰━\n\n"
+            f"▱▱▱▱\n"
             f"┃ {bar} ┃\n"
-            f"┗━━━━━━━━━━━━━┛\n\n"
+            f"▱▱▱▱\n\n"
             f"✨ *Please wait, premium upload is processing...*"
         )
         
@@ -188,7 +188,7 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
         f"╭━━━〔 🚀 𝙎𝙏𝘼𝙍𝙏𝙄𝙉𝙂 𝙐𝙋𝙇𝙊𝘼𝘿 〕━━━╮\n"
         f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
         f"┃ ⚙️ 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ `Preparing assets...`\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"╰"
     )
     reply = await bot.send_message(channel_id, start_upload_prompt)
     
