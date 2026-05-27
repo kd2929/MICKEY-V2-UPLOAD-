@@ -318,12 +318,12 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
             # Caption
             cc = (
-                f"📌 **ID ➤** `{str(seq).zfill(3)}`\n"
-                f"📖 **Topic ➤** {name1[:60]}\n"
-                f"📱 **App :** `{app_name}`\n"
-                f"🎯 **Batch •** `{b_name}`\n"
-                f"🎬 **Quality •** `{raw_text2}p`\n\n"
-                f"⬇️ **Downloaded By •** {BRAND}"
+                f"📌 **ID ⭓** `{str(seq).zfill(3)}`\n"
+                f"📖 **Topic ⭓** {name1[:60]}\n"
+                f"📱 **App ⭓** `{app_name}`\n"
+                f"📑 **Batch ⭓** `{b_name}`\n"
+                f"🎬 **Quality ⭓** `{raw_text2}p`\n\n"
+                f"🧑‍💻 **Downloaded By : ** {BRAND}"
             )
 
             try:
@@ -398,7 +398,7 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
             f"✅ **Done!**\n\n"
             f"🎯 `{b_name}` · 🎬 `{raw_text2}p`\n"
             f"📹 `{len(uploaded_topics)}` videos uploaded\n\n"
-            f"⬇️ {BRAND}"
+            f"👑 {BRAND}"
         )
         try:
             await bot.send_message(channel_id, done_text, disable_web_page_preview=True)
