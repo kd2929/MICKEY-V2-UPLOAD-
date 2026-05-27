@@ -29,21 +29,54 @@ logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
 @bot.on_message(filters.command(["start"]))
 async def account_login(bot: Client, m: Message):
-    await m.reply_text(f"🌥️ **Hello, Master.**\n**🟢I'm active and running smoothly ⚡  /master**\n\n**<-URL Acceptable->**\n-`All Non-Drm+Drm Protected Url`\n-`Mpeg Dash Url`\n-`Vision IAS`\n-`PhysicsWallah`\n-`ClassPlus Url`\n-`Allen Institute`\n-`Kalam Publication`\n\n**Thanks for using me**\n\n**Developer -** `@Sargio`")
+    start_msg = (
+        f"╭━━━〔 🌟 𝙎𝙔𝙎𝙏𝙀𝙈 𝘼𝘾𝙏𝙄𝙑𝙀 〕━━━╮\n"
+        f"┃ 👤 𝙃𝙚𝙡𝙡𝙤, 𝙈𝙖𝙨𝙩𝙚𝙧!\n"
+        f"┃ 🟢 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ 𝙍𝙪𝙣𝙣𝙞𝙣𝙜 𝙎𝙢𝙤𝙤𝙩𝙝𝙡𝙮 ⚡\n"
+        f"┃ 🛠️ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 ➠ /master\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+        f"📥 𝙎𝙪𝙥𝙥𝙤𝙧𝙩𝙚𝙙 𝙐𝙍𝙇𝙨 ➠\n"
+        f"├• 𝘼𝙡𝙡 𝙉𝙤𝙣-𝘿𝙍𝙈 + 𝘿𝙍𝙈 𝙋𝙧𝙤𝙩𝙚𝙘𝙩𝙚𝙙\n"
+        f"├• 𝙈𝙥𝙚𝙜 𝘿𝙖𝙨𝙝 / 𝙑𝙞𝙨𝙞𝙤𝙣 𝙄𝘼𝙎\n"
+        f"├• 𝙋𝙝𝙮𝙨𝙞𝙘𝙨𝙒𝙖𝙡𝙡𝙖𝙝 / 𝘾𝙡𝙖𝙨𝙨𝙋𝙡𝙪𝙨\n"
+        f"├• 𝘼𝙡𝙡𝙚𝙣 / 𝙆𝙖𝙡𝙖𝙢 𝙋𝙪𝙗𝙡𝙞𝙘𝙖𝙩𝙞𝙤𝙣\n\n"
+        f"⚡ 𝘿𝙚𝙫𝙚𝙡𝙤𝙥𝙚𝙧 ➠ @Sargio"
+    )
+    await m.reply_text(start_msg)
 
 @bot.on_message(filters.command("stop"))
 async def restart_handler(bot, m):
     if m.chat.id not in Config.VIP_USERS:
         print(f"User ID not in AUTH_USERS", m.chat.id)
-        await bot.send_message(m.chat.id, f"**Oopss! You are not a Premium member **\n\n**PLEASE UPGRADE YOUR PLAN**\n\n**/upgrade for Plan Details**\n**Send me your user id for authorization your User id** -     `{m.chat.id}`\n\n**Sab kuch free me chahiye kya be laude **")
+        access_denied = (
+            f"╭━━━〔 ⚠️ 𝘼𝘾𝘾𝙀𝙎𝙎 𝘿𝙀𝙉𝙄𝙀𝘿 〕━━━╮\n"
+            f"┃ 🚫 𝙔𝙤𝙪 𝙖𝙧𝙚 𝙣𝙤𝙩 𝙖 𝙋𝙧𝙚𝙢𝙞𝙪𝙢 𝙈𝙚𝙢𝙗𝙚𝙧!\n"
+            f"┃ 🔑 𝙔𝙤𝙪𝙧 𝙄𝘿 ➠ `{m.chat.id}`\n"
+            f"┃ 📝 𝙐𝙥𝙜𝙧𝙖𝙙𝙚 ➠ Send ID to admin\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"💬 *Please upgrade your plan to unlock.*"
+        )
+        await bot.send_message(m.chat.id, access_denied)
         return
-    await m.reply_text("🚦**STOPPED**🚦", True)
+    
+    stop_msg = (
+        f"╭━━━〔 🚦 𝙎𝙔𝙎𝙏𝙀𝙈 𝙎𝙏𝙊𝙋𝙋𝙀𝘿 〕━━━╮\n"
+        f"┃ 🔴 𝘽𝙤𝙩 𝙞𝙨 𝙧𝙚𝙨𝙩𝙖𝙧𝙩𝙞𝙣𝙜 𝙣𝙤𝙬...\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+    )
+    await m.reply_text(stop_msg, True)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 @bot.on_message(filters.command(["master"]))
 async def account_login(bot: Client, m: Message):
     try:
-        editable = await m.reply_text('**Send 🗂️Master TXT🗂️ file for download**')
+        master_prompt = (
+            f"╭━━━〔 🗂️ 𝙈𝘼𝙎𝙏𝙀𝙍 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 📥 𝙎𝙚𝙣𝙙 𝙈𝙖𝙨𝙩𝙚𝙧 .𝙏𝙓𝙏 𝙁𝙞𝙡𝙚\n"
+            f"┃ ✉️ *Or send direct links as text!*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        editable = await m.reply_text(master_prompt)
         input: Message = await bot.listen(editable.chat.id)
         path = f"./downloads/{m.chat.id}"
         temp_dir = "./temp"
@@ -52,7 +85,6 @@ async def account_login(bot: Client, m: Message):
         os.makedirs(temp_dir)
         if input.document:
             x = await input.download()
-            #await bot.send_document(-1002091543838, x)
             await input.delete(True)
             file_name = os.path.splitext(os.path.basename(x))[0]
         
@@ -63,7 +95,13 @@ async def account_login(bot: Client, m: Message):
                 links = [i.split("://", 1) for i in content]
                 os.remove(x)
             except Exception as e:
-                await m.reply_text(f"Error processing file: {e}")
+                err_msg = (
+                    f"╭━━━〔 ⚠️ 𝙀𝙍𝙍𝙊𝙍 〕━━━╮\n"
+                    f"┃ 🚫 Failed to process file!\n"
+                    f"┃ 📝 `{e}`\n"
+                    f"╰━━━━━━━━━━━━━━━━━━╯"
+                )
+                await m.reply_text(err_msg)
                 os.remove(x)
                 return
         else:
@@ -71,16 +109,38 @@ async def account_login(bot: Client, m: Message):
             content = content.split("\n")
             links = [i.split("://", 1) for i in content]
             await input.delete(True)
-        await editable.edit(f"Total links🔗 found are **{len(links)}**\n\nSend From where you want to download initial is **1**")
+            
+        links_found = (
+            f"╭━━━〔 🔗 𝙇𝙄𝙉𝙆𝙎 𝙁𝙊𝙐𝙉𝘿 〕━━━╮\n"
+            f"┃ 📊 𝙏𝙤𝙩𝙖𝙡 𝙇𝙞𝙣𝙠𝙨 ➠ `{len(links)}`\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"🔢 *Send from where you want to start (Default is 1):*"
+        )
+        await editable.edit(links_found)
+        
         if m.chat.id not in Config.VIP_USERS:
             print(f"User ID not in AUTH_USERS", m.chat.id)
-            await bot.send_message(m.chat.id, f"**Oopss! You are not a Premium member **\n\n**PLEASE UPGRADE YOUR PLAN**\n\n**/upgrade for Plan Details**\n**Send me your user id for authorization your User id** -     `{m.chat.id}`\n\n**💶🪙**")
+            access_denied = (
+                f"╭━━━〔 ⚠️ 𝘼𝘾𝘾𝙀𝙎𝙎 𝘿𝙀𝙉𝙄𝙀𝘿 〕━━━╮\n"
+                f"┃ 🚫 𝙔𝙤𝙪 𝙖𝙧𝙚 𝙣𝙤𝙩 𝙖 𝙋𝙧𝙚𝙢𝙞𝙪𝙢 𝙈𝙚𝙢𝙗𝙚𝙧!\n"
+                f"┃ 🔑 𝙔𝙤𝙪𝙧 𝙄𝘿 ➠ `{m.chat.id}`\n"
+                f"┃ 📝 𝙐𝙥𝙜𝙧𝙖𝙙𝙚 ➠ Send ID to admin\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            )
+            await bot.send_message(m.chat.id, access_denied)
             return
+            
         input0: Message = await bot.listen(editable.chat.id)
         raw_text = input0.text
         await input0.delete(True)
 
-        await editable.edit("**Enter Batch Name or send /d for grabbing from text filename.**")
+        batch_prompt = (
+            f"╭━━━〔 📦 𝘽𝘼𝙏𝘾𝙃 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 📝 𝙀𝙣𝙩𝙚𝙧 𝘽𝙖𝙩𝙘𝙝 𝙉𝙖𝙢𝙚\n"
+            f"┃ 🧭 *Or send /d to auto-grab file name*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(batch_prompt)
         input1: Message = await bot.listen(editable.chat.id)
         raw_text0 = input1.text
         await input1.delete(True)
@@ -89,17 +149,34 @@ async def account_login(bot: Client, m: Message):
         else:
             b_name = raw_text0
             
-        await editable.edit("**Enter App Name **")
+        app_prompt = (
+            f"╭━━━〔 📱 𝘼𝙋𝙋 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 💬 𝙀𝙣𝙩𝙚𝙧 𝘼𝙥𝙥 𝙉𝙖𝙢𝙚\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(app_prompt)
         input111: Message = await bot.listen(editable.chat.id)
         app_name = input111.text
         await input111.delete(True)
 
-        await editable.edit("**Enter resolution or Video Quality**\n\nEg - `360` or `480` or `720`**")
+        res_prompt = (
+            f"╭━━━〔 ⚙️ 𝙍𝙀𝙎𝙊𝙇𝙐𝙏𝙄𝙊𝙉 〕━━━╮\n"
+            f"┃ 📺 𝙀𝙣𝙩𝙚𝙧 𝙑𝙞𝙙𝙚ο 𝙌𝙪𝙖𝙡𝙞𝙩𝙮\n"
+            f"┃ 💡 *Eg: 360 | 480 | 720*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(res_prompt)
         input2: Message = await bot.listen(editable.chat.id)
         raw_text2 = input2.text
         await input2.delete(True)
 
-        await editable.edit("**Enter Your Channel Name or Owner Name**\n\nEg : Dᴏᴡɴʟᴏᴀᴅ Bʏ : `『ᎷΔŞŦᏋᏒ』❤️`")
+        credits_prompt = (
+            f"╭━━━〔 👑 𝘾𝙍𝙀𝘿𝙄𝙏𝙎 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 🏷️ 𝙀𝙣𝙩𝙚𝙧 𝙔𝙤𝙪𝙧 𝙉𝙖𝙢𝙚 / 𝘽𝙮\n"
+            f"┃ 💡 *Eg: 『ᎷΔŞŦᏋ🇷』❤️*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(credits_prompt)
         input3: Message = await bot.listen(editable.chat.id)
         raw_text3 = input3.text
         await input3.delete(True)
@@ -108,23 +185,54 @@ async def account_login(bot: Client, m: Message):
         else:               
             MR = raw_text3
     
-        await editable.edit("Now send the **Thumb URL**\nEg : `https://telegra.ph/file/0eca3245df8a40c7e68d4.jpg`\n\nor Send `no`")
+        thumb_prompt = (
+            f"╭━━━〔 🖼️ 𝙏𝙃𝙐𝙈𝘽𝙉𝘼𝙄𝙇 〕━━━╮\n"
+            f"┃ 🌐 𝙎𝙚𝙣𝙙 𝙏𝙝𝙪𝙢𝙗𝙣𝙖𝙞𝙡 𝙐𝙍𝙇\n"
+            f"┃ 🚫 *Or type 'no' to skip*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(thumb_prompt)
         input6: Message = await bot.listen(editable.chat.id)
         thumb = input6.text
         await input6.delete(True)
         
-        await editable.edit("**Please Provide Channel id or where you want to Upload video or Sent Video otherwise `/d` **\n\n**And make me admin in this channel then i can able to Upload otherwise i can't**")
+        channel_prompt = (
+            f"╭━━━〔 📢 𝙐𝙋𝙇𝙊𝘼𝘿 𝙏𝘼𝙍𝙂𝙀𝙏 〕━━━╮\n"
+            f"┃ 🆔 𝙎𝙚𝙣𝙙 𝘾𝙝𝙖𝙣𝙣𝙚𝙡 𝙄𝘿\n"
+            f"┃ 🧭 *Or send /d to use current chat*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"⚠️ *Note: Make sure to add Bot as admin!*"
+        )
+        await editable.edit(channel_prompt)
         input7: Message = await bot.listen(editable.chat.id)
         if "/d" in input7.text:
             channel_id = m.chat.id
         else:
             channel_id = input7.text
         await input7.delete()
-        await editable.edit("**Malik mera time aa gya mai chala\n\nTum apna dekh lo**")
+
+        processing_prompt = (
+            f"╭━━━〔 🚀 𝙋𝙍𝙊𝘾𝙀𝙎𝙎𝙄𝙉加 〕━━━╮\n"
+            f"┃ ⚡ 𝙈𝙖𝙡𝙞𝙠, 𝙈𝙚𝙧𝙖 𝙆𝙖𝙖𝙢 𝙎𝙝𝙪𝙧𝙪!\n"
+            f"┃ ⏳ *Starting downloads shortly...*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(processing_prompt)
         try:
-            await bot.send_message(chat_id=channel_id, text=f'🎯**Target Batch - {b_name}**')
+            target_batch = (
+                f"╭━━━〔 🎯 𝙏𝘼𝙍𝙂𝙀𝙏 𝘽𝘼𝙏𝘾𝙃 〕━━━╮\n"
+                f"┃ 📦 **{b_name}**\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            )
+            await bot.send_message(chat_id=channel_id, text=target_batch)
         except Exception as e:
-            await m.reply_text(f"**Fail Reason »** {e}\n\n**Bot Made By** 🌟Sargio🌟")
+            fail_prompt = (
+                f"╭━━━〔 ⚠️ 𝙁𝘼𝙄𝙇 𝙍𝙀𝘼𝙎𝙊𝙉 〕━━━╮\n"
+                f"┃ 🚫 `{e}`\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+                f"🌟 Bot Made By @Sargio 🌟"
+            )
+            await m.reply_text(fail_prompt)
             return
         await editable.delete()
         if len(links) == 1:
@@ -184,8 +292,30 @@ async def account_login(bot: Client, m: Message):
                 cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'    
                 
             try:
-                cc = f'**[🎓]Vid Id  ➠** {str(count).zfill(3)}\n** Tᴏᴘɪᴄ ➠** {name1} [{raw_text2}] .mkv \n\n** Bᴀᴛᴄʜ Nᴀᴍᴇ ➠ ** {b_name}\n\n** 𝖠ᴘᴘ 𝖭ᴀᴍᴇ ➤ ** {app_name}\n\n** ⏳Dᴏᴡɴʟᴏᴀᴅ Bʏ ➤ {MR}**\n\n'
-                cc1 = f'**[🗳]Pdf Id  ➠** {str(count).zfill(3)}\n** Tᴏᴘɪᴄ ➠** {name1} .pdf \n\n** Bᴀᴛᴄʜ Nᴀᴍᴇ ➠:** {b_name}\n\n** 𝖠ᴘᴘ 𝖭ᴀᴍᴇ ➤ ** {app_name}\n\n** ⏳Dᴏᴡɴʟᴏᴀᴅ Bʏ ➤ {MR}**\n\n'                   
+                # Custom Stylish UI for Video Details
+                cc = (
+                    f"╭━━━〔 🎓 𝙑𝙄𝘿𝙀𝙊 𝘿𝙀𝙏𝘼𝙄𝙇𝙎 〕━━━╮\n"
+                    f"┃ 🔢 𝙄𝘿 ➠ {str(count).zfill(3)}\n"
+                    f"┃ 📚 𝙏𝙤𝙥𝙞𝙘 ➠ {name1}\n"
+                    f"┃ 🏷️ 𝙏𝙞𝙩𝙡𝙚 ➠ {raw_text2}\n"
+                    f"┃ 📦 𝘽𝙖𝙩𝙘𝙝 ➠ {b_name}\n"
+                    f"┃ 📱 𝘼𝙥𝙥 ➠ {app_name}\n"
+                    f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
+                    f"🎥 𝙁𝙞𝙡𝙚 ➠ {name1} [{raw_text2}].mkv\n\n"
+                    f"⚡ 𝘿𝙤𝙬𝙣 𝘽𝙮 ➠ {MR}"
+                )
+
+                # Custom Stylish UI for PDF Details
+                cc1 = (
+                    f"╭━━━〔 📄 𝙋𝘿𝙁 𝘿𝙀𝙏𝘼𝙄𝙇𝙎 〕━━━╮\n"
+                    f"┃ 🔢 𝙄𝘿 ➠ {str(count).zfill(3)}\n"
+                    f"┃ 📚 𝙏𝙤𝙥𝙞𝙘 ➠ {name1}\n"
+                    f"┃ 📦 𝘽𝙖𝙩𝙘𝙝 ➠ {b_name}\n"
+                    f"┃ 📱 𝘼𝙥𝙥 ➠ {app_name}\n"
+                    f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
+                    f"📄 𝙁𝙞𝙡𝙚 ➠ {name1}.pdf\n\n"
+                    f"⚡ 𝘿𝙤𝙬𝙣 𝘽𝙮 ➠ {MR}"
+                )                 
 
                 if "drive" in url or ".pdf" in url or "pdfs" in url:
                     try:
@@ -201,7 +331,13 @@ async def account_login(bot: Client, m: Message):
                         continue
 
                 elif mpd and keys:
-                    Show = f"**⏳ 𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖡𝗈𝗌𝗌 ⏳:-**\n\n**Name :-** `{name}\n🎥**Url -** `{url}`\n🎥Video Quality - {raw_text2}\n\n Bot Made By  ⏰『sargio』⏰"
+                    Show = (
+                        f"╭━━━〔 ⏳ 𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+                        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+                        f"┃ 🏷️ 𝙌𝙪𝙖𝙡𝙞𝙩𝙮 ➠ `{raw_text2}p`\n"
+                        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n"
+                        f"⏰ Bot Made By 『sargio』"
+                    )
                     prog = await bot.send_message(channel_id, Show)
                     await helper.download_and_dec_video(mpd, keys, path, name, raw_text2)
                     await prog.delete(True)
@@ -210,7 +346,13 @@ async def account_login(bot: Client, m: Message):
                     await asyncio.sleep(0.5)
                 else:
                     mpd = None
-                    Show = f"**⏳ 𝖣𝗈𝗐𝗇𝗅𝗈𝖺𝖽𝗂𝗇𝗀 𝖡𝗈𝗌𝗌 ⏳:-**\n\n**Name :-** `{name}\n🎥Video Quality - {raw_text2}\n\n Bot Made By  ⏰『sargio』⏰"
+                    Show = (
+                        f"╭━━━〔 ⏳ 𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+                        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+                        f"┃ 🏷️ 𝙌𝙪𝙖𝙡𝙞𝙩𝙮 ➠ `{raw_text2}p`\n"
+                        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n"
+                        f"⏰ Bot Made By 『sargio』"
+                    )
                     prog = await bot.send_message(channel_id, Show)
                     
                     # Use special function for Kalam videos
@@ -228,10 +370,15 @@ async def account_login(bot: Client, m: Message):
             except Exception as e:
                 continue
         try:
-            await bot.send_message(channel_id, " 🌟** Sᴜᴄᴄᴇsғᴜʟʟʏ Dᴏᴡɴʟᴏᴀᴅᴇᴅ Aʟʟ Lᴇᴄᴛᴜʀᴇs...! **🌟 ")
+            success_done = (
+                f"╭━━━〔 🌟 𝙎𝙐𝘾𝘾𝙀𝙎𝙎 〕━━━╮\n"
+                f"┃ 🎉 𝘼𝙡𝙡 𝙇𝙚𝙘𝙩𝙪𝙧𝙚𝙨 𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙𝙚𝙙!\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━╯"
+            )
+            await bot.send_message(channel_id, success_done)
         except FloodWait as fw:
             await asyncio.sleep(fw.value)
-            await bot.send_message(channel_id, " 🌟** Sᴜᴄᴄᴇsғᴜʟʟʏ Dᴏᴡɴʟᴏᴀᴅᴇᴅ Aʟʟ Lᴇᴄᴛᴜʀᴇs...! **🌟 ")
+            await bot.send_message(channel_id, success_done)
     except FloodWait as fw:
         await asyncio.sleep(fw.value)
         try:
