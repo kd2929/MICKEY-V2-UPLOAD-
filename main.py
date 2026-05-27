@@ -320,8 +320,7 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
             cc = (
                 f"📌 **ID ⭓** `{str(seq).zfill(3)}`\n"
                 f"📖 **Topic ⭓** {name1[:60]}\n"
-                f"📱 **App ⭓** `{app_name}`\n"
-                f"📑 **Batch ⭓** `{b_name}`\n"
+                f"🎥**Batch ⭓** `{b_name}`\n"
                 f"🎬 **Quality ⭓** `{raw_text2}p`\n\n"
                 f"🧑‍💻 **Downloaded By : ** {BRAND}"
             )
