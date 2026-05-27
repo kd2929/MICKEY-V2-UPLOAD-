@@ -165,10 +165,8 @@ async def progress_bar(current, total, reply, start_time):
             f"┃ 📦 𝙎𝙞𝙯𝙚 ➠ `{humanbytes(current)}` / `{humanbytes(total)}`\n"
             f"┃ ⚡ 𝙎𝙥𝙚𝙚𝙙 ➠ `{humanbytes(speed)}/s`\n"
             f"┃ ⏱️ 𝙀𝙏𝘼 ➠ `{time_formatter(eta)}`\n"
-            f"╰━\n\n"
-            f"▱▱▱▱\n"
             f"┃ {bar} ┃\n"
-            f"▱▱▱▱\n\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
             f"✨ *Please wait, premium upload is processing...*"
         )
         
