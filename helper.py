@@ -156,7 +156,7 @@ async def progress_bar(current, total, reply, start_time):
         
         # Create stylish progress bar
         filled_length = int(20 * current // total)
-        bar = '█' * filled_length + '░' * (20 - filled_length)
+        bar = '▰' * filled_length + '▱' * (20 - filled_length)
         
         # Premium formatted progress update with unified boxes
         progress_text = (
@@ -165,10 +165,10 @@ async def progress_bar(current, total, reply, start_time):
             f"┃ 📦 𝙎𝙞𝙯𝙚 ➠ `{humanbytes(current)}` / `{humanbytes(total)}`\n"
             f"┃ ⚡ 𝙎𝙥𝙚𝙚𝙙 ➠ `{humanbytes(speed)}/s`\n"
             f"┃ ⏱️ 𝙀𝙏𝘼 ➠ `{time_formatter(eta)}`\n"
-            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
-            f"┏━━━━━━━━━━━━━━━━━━━━┓\n"
+            f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"┏━━━━━━━━━━━━━┓\n"
             f"┃ {bar} ┃\n"
-            f"┗━━━━━━━━━━━━━━━━━━━━┛\n\n"
+            f"┗━━━━━━━━━━━━━┛\n\n"
             f"✨ *Please wait, premium upload is processing...*"
         )
         
@@ -188,7 +188,7 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
         f"╭━━━〔 🚀 𝙎𝙏𝘼𝙍𝙏𝙄𝙉𝙂 𝙐𝙋𝙇𝙊𝘼𝘿 〕━━━╮\n"
         f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
         f"┃ ⚙️ 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ `Preparing assets...`\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━╯"
     )
     reply = await bot.send_message(channel_id, start_upload_prompt)
     
@@ -342,7 +342,7 @@ async def merge_and_send_vid(bot, m, cc, name, prog, path, url, thumb, channel_i
     merge_done_prompt = (
         f"╭━━━〔 💿 𝙈𝙀𝙍𝙂𝙀 𝘾𝙊𝙈𝙋𝙇𝙀𝙏𝙀 〕━━━╮\n"
         f"┃ ⚡ *All media elements joined!*\n"
-        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
     )
     
     # Use the optimized send function
