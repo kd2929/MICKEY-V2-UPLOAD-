@@ -1,10 +1,11 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from pyromod import listen
 from aiohttp import ClientSession
 from config import Config
 import helper
+import time
 import sys
 import shutil
 import os, re
@@ -24,611 +25,372 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-logging.getLogger("pyrogram").setLevel(logging.INFO)
+logging.getLogger("pyrogram").setLevel(logging.WARNING)
 
-BRAND = "[Mrsargio](https://t.me/Mrsargio)"
-
-
-def is_pdf_url(url):
-    url_lower = url.lower()
-    return url_lower.endswith(".pdf") or ".pdf" in url_lower or "pdfs" in url_lower
-
-
-def make_channel_link(channel_id, message_id):
-    try:
-        cid = str(channel_id)
-        if cid.startswith("-100"):
-            cid = cid[4:]
-        elif cid.startswith("-"):
-            cid = cid[1:]
-        return f"https://t.me/c/{cid}/{message_id}"
-    except Exception:
-        return None
-
-
-def override_quality_in_url(url, quality):
-    for q in ["144", "240", "360", "480", "720", "1080"]:
-        url = url.replace(f"play_{q}p", f"play_{quality}p")
-        url = url.replace(f"_{q}p.", f"_{quality}p.")
-        url = url.replace(f"/{q}p/", f"/{quality}p/")
-    return url
-
-
-# ── /start ────────────────────────────────────────────────────────────────────
 @bot.on_message(filters.command(["start"]))
-async def start_handler(bot: Client, m: Message):
-    await m.reply_text(
-        f"╭━━〔 🚀 MICKEY V2 〕━━╮\n"
-        f"┃ ⚡ Fast • Secure • Premium\n"
-        f"┃ 🎯 Multi Platform Downloader\n"
-        f"╰━━━━━━━━━━━━━━╯\n\n"
-        f"📥 Send TXT File or Links To Start\n\n"
-        f"👑 {BRAND}",
-        disable_web_page_preview=True,
-        reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("⚡ START DOWNLOADING ⚡", callback_data="start_master")]
-        ])
+async def account_login(bot: Client, m: Message):
+    start_msg = (
+        f"╭━━━〔 🌟 𝙎𝙔𝙎𝙏𝙀𝙈 𝘼𝘾𝙏𝙄𝙑𝙀 〕━━━╮\n"
+        f"┃ 👤 𝙃𝙚𝙡𝙡𝙤, 𝙈𝙖𝙨𝙩𝙚𝙧!\n"
+        f"┃ 🟢 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ 𝙍𝙪𝙣𝙣𝙞𝙣𝙜 𝙎𝙢𝙤𝙤𝙩𝙝𝙡𝙮 ⚡\n"
+        f"┃ 🛠️ 𝘾𝙤𝙢𝙢𝙖𝙣𝙙 ➠ /master\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+        f"📥 𝙎𝙪𝙥𝙥𝙤𝙧𝙩𝙚𝙙 𝙐𝙍𝙇𝙨 ➠\n"
+        f"├• 𝘼𝙡𝙡 𝙉𝙤𝙣-𝘿𝙍𝙈 + 𝘿𝙍𝙈 𝙋𝙧𝙤𝙩𝙚𝙘𝙩𝙚𝙙\n"
+        f"├• 𝙈𝙥𝙚𝙜 𝘿𝙖𝙨𝙝 / 𝙑𝙞𝙨𝙞𝙤𝙣 𝙄𝘼𝙎\n"
+        f"├• 𝙋𝙝𝙮𝙨𝙞𝙘𝙨𝙒𝙖𝙡𝙡𝙖𝙝 / 𝘾𝙡𝙖𝙨𝙨𝙋𝙡𝙪𝙨\n"
+        f"├• 𝘼𝙡𝙡𝙚𝙣 / 𝙆𝙖𝙡𝙖𝙢 𝙋𝙪𝙗𝙡𝙞𝙘𝙖𝙩𝙞𝙤𝙣\n\n"
+        f"⚡ 𝘿𝙚𝙫𝙚𝙡𝙤𝙥𝙚𝙧 ➠ @Sargio"
     )
+    await m.reply_text(start_msg)
 
-
-@bot.on_callback_query(filters.regex("^start_master$"))
-async def start_master_callback(client: Client, cb):
-    await cb.answer()
-    await run_master(client, cb.message, cb.from_user.id, cb.message.chat.id)
-
-
-# ── /stop ─────────────────────────────────────────────────────────────────────
 @bot.on_message(filters.command("stop"))
 async def restart_handler(bot, m):
     if m.chat.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.chat.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
+        print(f"User ID not in AUTH_USERS", m.chat.id)
+        access_denied = (
+            f"╭━━━〔 ⚠️ 𝘼𝘾𝘾𝙀𝙎𝙎 𝘿𝙀𝙉𝙄𝙀𝘿 〕━━━╮\n"
+            f"┃ 🚫 𝙔𝙤𝙪 𝙖𝙧𝙚 𝙣𝙤𝙩 𝙖 𝙋𝙧𝙚𝙢𝙞𝙪𝙢 𝙈𝙚𝙢𝙗𝙚𝙧!\n"
+            f"┃ 🔑 𝙔𝙤𝙪𝙧 𝙄𝘿 ➠ `{m.chat.id}`\n"
+            f"┃ 📝 𝙐𝙥𝙜𝙧𝙖𝙙𝙚 ➠ Send ID to admin\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"💬 *Please upgrade your plan to unlock.*"
         )
+        await bot.send_message(m.chat.id, access_denied)
         return
-    await m.reply_text(f"🔄 Restarting...", disable_web_page_preview=True)
+    
+    stop_msg = (
+        f"╭━━━〔 🚦 𝙎𝙔𝙎𝙏𝙀𝙈 𝙎𝙏𝙊𝙋𝙋𝙀𝘿 〕━━━╮\n"
+        f"┃ 🔴 𝘽𝙤𝙩 𝙞𝙨 𝙧𝙚𝙨𝙩𝙖𝙧𝙩𝙞𝙣𝙜 𝙣𝙤𝙬...\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+    )
+    await m.reply_text(stop_msg, True)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
-
-# ── Shared master logic ───────────────────────────────────────────────────────
-async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
+@bot.on_message(filters.command(["master"]))
+async def account_login(bot: Client, m: Message):
     try:
-        if user_id not in Config.VIP_USERS:
-            await m.reply_text(
-                f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-                f"┃ 🆔 `{user_id}`\n"
-                f"┃ 🚫 Premium Access Required\n"
-                f"╰━━━━━━━━━━━━━━╯\n\n"
-                f"👑 {BRAND}",
-                disable_web_page_preview=True
-            )
-            return
-
-        # ── Step 1: File / URLs ────────────────────────────────────────────
-        editable = await m.reply_text(
-            f"╭━━〔 📂 SEND FILE 〕━━╮\n"
-            f"┃ 📄 Upload TXT File\n"
-            f"┃ 🔗 Or Paste URLs\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"✍️ Format:\n"
-            f"`Title://URL`\n\n"
-            f"👑 {BRAND}"
+        master_prompt = (
+            f"╭━━━〔 🗂️ 𝙈𝘼𝙎𝙏𝙀𝙍 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 📥 𝙎𝙚𝙣𝙙 𝙈𝙖𝙨𝙩𝙚𝙧 .𝙏𝙓𝙏 𝙁𝙞𝙡𝙚\n"
+            f"┃ ✉️ *Or send direct links as text!*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
-        inp: Message = await bot.listen(editable.chat.id)
-
-        path = f"./downloads/{chat_id}"
+        editable = await m.reply_text(master_prompt)
+        input: Message = await bot.listen(editable.chat.id)
+        path = f"./downloads/{m.chat.id}"
         temp_dir = "./temp"
         if os.path.exists(temp_dir):
             shutil.rmtree(temp_dir)
-        os.makedirs(temp_dir, exist_ok=True)
-        os.makedirs(path, exist_ok=True)
-
-        file_name = "Batch"
-        if inp.document:
-            x = await inp.download()
-            await inp.delete(True)
+        os.makedirs(temp_dir)
+        if input.document:
+            x = await input.download()
+            await input.delete(True)
             file_name = os.path.splitext(os.path.basename(x))[0]
+        
             try:
-                with open(x, "r", encoding="utf-8", errors="ignore") as f:
+                with open(x, "r") as f:
                     content = f.read()
-                content = [line.strip() for line in content.split("\n") if line.strip()]
-                links = [i.split("://", 1) for i in content if "://" in i]
+                content = content.split("\n")
+                links = [i.split("://", 1) for i in content]
                 os.remove(x)
             except Exception as e:
-                await editable.edit(f"❌ `{e}`")
+                err_msg = (
+                    f"╭━━━〔 ⚠️ 𝙀𝙍𝙍𝙊𝙍 〕━━━╮\n"
+                    f"┃ 🚫 Failed to process file!\n"
+                    f"┃ 📝 `{e}`\n"
+                    f"╰━━━━━━━━━━━━━━━━━━╯"
+                )
+                await m.reply_text(err_msg)
+                os.remove(x)
                 return
         else:
-            content = [line.strip() for line in inp.text.split("\n") if line.strip()]
-            links = [i.split("://", 1) for i in content if "://" in i]
-            await inp.delete(True)
-
-        total_links = len(links)
-        total_videos = sum(1 for l in links if len(l) > 1 and not is_pdf_url("https://" + l[1]))
-
-        # ── Step 2: Start number ───────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 🎞️ SCAN COMPLETED 〕━━╮\n"
-            f"┃ 📦 Videos Found ➠ `{total_videos}`\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"⚡ Send Starting Number\n"
-            f"Example ➠ `1`\n\n"
-            f"👑 {BRAND}"
+            content = input.text
+            content = content.split("\n")
+            links = [i.split("://", 1) for i in content]
+            await input.delete(True)
+            
+        links_found = (
+            f"╭━━━〔 🔗 𝙇𝙄𝙉𝙆𝙎 𝙁𝙊𝙐𝙉𝘿 〕━━━╮\n"
+            f"┃ 📊 𝙏𝙤𝙩𝙖𝙡 𝙇𝙞𝙣𝙠𝙨 ➠ `{len(links)}`\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"🔢 *Send from where you want to start (Default is 1):*"
         )
+        await editable.edit(links_found)
+        
+        if m.chat.id not in Config.VIP_USERS:
+            print(f"User ID not in AUTH_USERS", m.chat.id)
+            access_denied = (
+                f"╭━━━〔 ⚠️ 𝘼𝘾𝘾𝙀𝙎𝙎 𝘿𝙀𝙉𝙄𝙀𝘿 〕━━━╮\n"
+                f"┃ 🚫 𝙔𝙤𝙪 𝙖𝙧𝙚 𝙣𝙤𝙩 𝙖 𝙋𝙧𝙚𝙢𝙞𝙪𝙢 𝙈𝙚𝙢𝙗𝙚𝙧!\n"
+                f"┃ 🔑 𝙔𝙤𝙪𝙧 𝙄𝘿 ➠ `{m.chat.id}`\n"
+                f"┃ 📝 𝙐𝙥𝙜𝙧𝙖𝙙𝙚 ➠ Send ID to admin\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
+            )
+            await bot.send_message(m.chat.id, access_denied)
+            return
+            
         input0: Message = await bot.listen(editable.chat.id)
-        raw_text = input0.text.strip()
+        raw_text = input0.text
         await input0.delete(True)
 
-        # ── Step 3: Batch name ─────────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 🎥 BATCH SETUP 〕━━╮\n"
-            f"┃ ✏️ Send Batch Name\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"📌 Send `/d` For Default Name\n\n"
-            f"👑 {BRAND}"
+        batch_prompt = (
+            f"╭━━━〔 📦 𝘽𝘼𝙏𝘾𝙃 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 📝 𝙀𝙣𝙩𝙚𝙧 𝘽𝙖𝙩𝙘𝙝 𝙉𝙖𝙢𝙚\n"
+            f"┃ 🧭 *Or send /d to auto-grab file name*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
+        await editable.edit(batch_prompt)
         input1: Message = await bot.listen(editable.chat.id)
-        raw_text0 = input1.text.strip()
+        raw_text0 = input1.text
         await input1.delete(True)
-        b_name = file_name if raw_text0 == '/d' else raw_text0
-
-        # ── Step 4: App name ───────────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 📡 SOURCE SETUP 〕━━╮\n"
-            f"┃ 📱 Send Platform Name\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"Examples:\n"
-            f"`PhysicsWallah`\n"
-            f"`Allen`\n"
-            f"`Kalam`\n\n"
-            f"👑 {BRAND}"
+        if raw_text0 == '/d':
+            b_name = file_name
+        else:
+            b_name = raw_text0
+            
+        app_prompt = (
+            f"╭━━━〔 📱 𝘼𝙋𝙋 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 💬 𝙀𝙣𝙩𝙚𝙧 𝘼𝙥𝙥 𝙉𝙖𝙢𝙚\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
+        await editable.edit(app_prompt)
         input111: Message = await bot.listen(editable.chat.id)
-        app_name = input111.text.strip()
+        app_name = input111.text
         await input111.delete(True)
 
-        # ── Step 5: Quality ────────────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 🎬 QUALITY SETUP 〕━━╮\n"
-            f"┃ 📺 Choose Video Quality\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"`144 • 240 • 360 • 480 • 720 • 1080`\n\n"
-            f"👑 {BRAND}"
+        res_prompt = (
+            f"╭━━━〔 ⚙️ 𝙍𝙀𝙎𝙊𝙇𝙐𝙏𝙄𝙊𝙉 〕━━━╮\n"
+            f"┃ 📺 𝙀𝙣𝙩𝙚𝙧 𝙑𝙞𝙙𝙚ο 𝙌𝙪𝙖𝙡𝙞𝙩𝙮\n"
+            f"┃ 💡 *Eg: 360 | 480 | 720*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
+        await editable.edit(res_prompt)
         input2: Message = await bot.listen(editable.chat.id)
-        raw_text2 = input2.text.strip()
+        raw_text2 = input2.text
         await input2.delete(True)
 
-        # ── Step 6: Thumbnail ──────────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 🖼️ THUMBNAIL SETUP 〕━━╮\n"
-            f"┃ 🔗 Send Thumbnail URL\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"❌ Send `no` To Skip\n\n"
-            f"👑 {BRAND}"
+        credits_prompt = (
+            f"╭━━━〔 👑 𝘾𝙍𝙀𝘿𝙄𝙏𝙎 𝙎𝙀𝙏𝙐𝙋 〕━━━╮\n"
+            f"┃ 🏷️ 𝙀𝙣𝙩𝙚𝙧 𝙔𝙤𝙪𝙧 𝙉𝙖𝙢𝙚 / 𝘽𝙮\n"
+            f"┃ 💡 *Eg: 『ᎷΔŞŦᏋ🇷』❤️*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
+        await editable.edit(credits_prompt)
+        input3: Message = await bot.listen(editable.chat.id)
+        raw_text3 = input3.text
+        await input3.delete(True)
+        if raw_text3 == 'de':
+            MR = "Sargio ❤️"
+        else:               
+            MR = raw_text3
+    
+        thumb_prompt = (
+            f"╭━━━〔 🖼️ 𝙏𝙃𝙐𝙈𝘽𝙉𝘼𝙄𝙇 〕━━━╮\n"
+            f"┃ 🌐 𝙎𝙚𝙣𝙙 𝙏𝙝𝙪𝙢𝙗𝙣𝙖𝙞𝙡 𝙐𝙍𝙇\n"
+            f"┃ 🚫 *Or type 'no' to skip*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
+        )
+        await editable.edit(thumb_prompt)
         input6: Message = await bot.listen(editable.chat.id)
-        thumb = input6.text.strip()
+        thumb = input6.text
         await input6.delete(True)
-
-        # ── Step 7: Destination ────────────────────────────────────────────
-        await editable.edit(
-            f"╭━━〔 📢 UPLOAD DESTINATION 〕━━╮\n"
-            f"┃ 📡 Send Channel ID\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"Example:\n"
-            f"`-1001234567890`\n\n"
-            f"📥 Send `/d` To Upload Here\n\n"
-            f"👑 {BRAND}"
+        
+        channel_prompt = (
+            f"╭━━━〔 📢 𝙐𝙋𝙇𝙊𝘼𝘿 𝙏𝘼𝙍𝙂𝙀𝙏 〕━━━╮\n"
+            f"┃ 🆔 𝙎𝙚𝙣𝙙 𝘾𝙝𝙖𝙣𝙣𝙚𝙡 𝙄𝘿\n"
+            f"┃ 🧭 *Or send /d to use current chat*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"⚠️ *Note: Make sure to add Bot as admin!*"
         )
+        await editable.edit(channel_prompt)
         input7: Message = await bot.listen(editable.chat.id)
-        channel_id = chat_id if "/d" in input7.text else input7.text.strip()
+        if "/d" in input7.text:
+            channel_id = m.chat.id
+        else:
+            channel_id = input7.text
         await input7.delete()
 
-        try:
-            channel_id = int(channel_id)
-        except Exception:
-            pass
-
-        await editable.edit(
-            f"╭━━〔 🚀 BATCH STARTED 〕━━╮\n"
-            f"┃ 🎥 `{b_name}`\n"
-            f"┃ 📡 `{app_name}`\n"
-            f"┃ 🎬 `{raw_text2}p`\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"⚡ Initializing Premium Upload Engine...\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
+        processing_prompt = (
+            f"╭━━━〔 🚀 𝙋𝙍𝙊𝘾𝙀𝙎𝙎𝙄𝙉加 〕━━━╮\n"
+            f"┃ ⚡ 𝙈𝙖𝙡𝙞𝙠, 𝙈𝙚𝙧𝙖 𝙆𝙖𝙖𝙢 𝙎𝙝𝙪𝙧𝙪!\n"
+            f"┃ ⏳ *Starting downloads shortly...*\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━━━━━━╯"
         )
-
-        # ── Batch start message in channel ─────────────────────────────────
+        await editable.edit(processing_prompt)
         try:
-            await bot.send_message(
-                chat_id=channel_id,
-                text=(
-                    f"╭━━〔 🚀 BATCH STARTED 〕━━╮\n"
-                    f"┃ 🎥 `{b_name}`\n"
-                    f"┃ 📡 `{app_name}`\n"
-                    f"┃ 🎬 `{raw_text2}p`\n"
-                    f"╰━━━━━━━━━━━━━━╯\n\n"
-                    f"⚡ Initializing Premium Upload Engine...\n\n"
-                    f"👑 {BRAND}"
-                ),
-                disable_web_page_preview=True
+            target_batch = (
+                f"╭━━━〔 🎯 𝙏𝘼𝙍𝙂𝙀𝙏 𝘽𝘼𝙏𝘾𝙃 〕━━━╮\n"
+                f"┃ 📦 **{b_name}**\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━━╯"
             )
+            await bot.send_message(chat_id=channel_id, text=target_batch)
         except Exception as e:
-            await m.reply_text(f"❌ Can't send to channel\n`{e}`\n\nMake sure I'm an admin there.")
-            return
-
-        await editable.delete()
-
-        count = 1 if len(links) == 1 else int(raw_text)
-        seq = count
-        mpd = None
-        keys = None
-        uploaded_topics = []
-
-        # ── Download loop ──────────────────────────────────────────────────
-        for i in range(count - 1, len(links)):
-            link_parts = links[i]
-            if len(link_parts) < 2:
-                continue
-
-            V = link_parts[1]
-            url = "https://" + V
-            raw_name = link_parts[0]
-
-            if is_pdf_url(url):
-                logging.info(f"Skipping PDF: {url}")
-                continue
-
-            url = override_quality_in_url(url, raw_text2)
-
-            try:
-                if "*" in url:
-                    mpd, keys = url.split("*")
-                elif "vimeo" in url:
-                    page_text = requests.get(url, headers=headers.allen).text
-                    found = re.findall(r'https://[^/?#]+\.[^/?#]+(?:/[^/?#]+)+\.(?:m3u8)', page_text)
-                    if found:
-                        url = found[0]
-                elif 'classplusapp.com' in url:
-                    if '4b06bf8d61c41f8310af9b2624459378203740932b456b07fcf817b737fbae27' in url:
-                        pattern = re.compile(r'https://videos\.classplusapp\.com/([a-f0-9]+)/([a-zA-Z0-9]+)\.m3u8')
-                        match = pattern.match(url)
-                        if match:
-                            urlx = f"https://videos.classplusapp.com/b08bad9ff8d969639b2e43d5769342cc62b510c4345d2f7f153bec53be84fe35/{match.group(2)}/{match.group(2)}.m3u8"
-                            url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={urlx}', headers=headers.cp).json()['url']
-                    else:
-                        url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers=headers.cp).json()['url']
-                elif '/master.mpd' in url:
-                    vid_id = url.split("/")[-2]
-                    policy = requests.post(
-                        'https://api.penpencil.xyz/v1/files/get-signed-cookie',
-                        headers=headers.pw,
-                        json={'url': f"https://d1d34p8vz63oiq.cloudfront.net/{vid_id}/master.mpd"}
-                    ).json()['data']
-                    url = f"https://sr-get-video-quality.selav29696.workers.dev/?Vurl=https://d1d34p8vz63oiq.cloudfront.net/{vid_id}/hls/{raw_text2}/main.m3u8{policy}"
-                elif "visionias" in url:
-                    async with ClientSession() as session:
-                        async with session.get(url, headers=headers.vision) as resp:
-                            page_text = await resp.text()
-                            match = re.search(r"(https://*.?playlist.m3u8.?)", page_text)
-                            if match:
-                                url = match.group(1)
-            except Exception as e:
-                logging.error(f"URL processing error: {e}")
-                seq += 1
-                continue
-
-            # Clean topic name
-            name1 = (
-                raw_name
-                .replace("\t", "").replace(":", " ").replace("/", "")
-                .replace("+", "").replace("#", "").replace("|", "")
-                .replace("@", "").replace("*", "").replace(".", "")
-                .replace("https", "").replace("http", "")
-                .strip()
+            fail_prompt = (
+                f"╭━━━〔 ⚠️ 𝙁𝘼𝙄𝙇 𝙍𝙀𝘼𝙎𝙊𝙉 〕━━━╮\n"
+                f"┃ 🚫 `{e}`\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
+                f"🌟 Bot Made By @Sargio 🌟"
             )
-            name1 = re.sub(r'^\d+\s*[)\.\-]?\s*', '', name1).strip()
-            name = f'{str(seq).zfill(3)}) {name1[:55]}'
+            await m.reply_text(fail_prompt)
+            return
+        await editable.delete()
+        if len(links) == 1:
+            count = 1
+        else:
+            count = int(raw_text)
+        mpd = None
+        for i in range(count - 1, len(links)):
+            V = links[i][1]
+            url = "https://" + V
+            if "*" in url:
+                mpd, keys = url.split("*")
+                print(mpd, keys)
+            elif "vimeo" in url:
+                text = requests.get(url, headers=headers.allen).text
+                pattern = r'https://[^/?#]+\.[^/?#]+(?:/[^/?#]+)+\.(?:m3u8)'
+                urls = re.findall(pattern, text)
+                for url in urls:
+                    print(url)
+                    break
+            elif 'classplusapp.com' in url:
+                if '4b06bf8d61c41f8310af9b2624459378203740932b456b07fcf817b737fbae27' in url:
+                    pattern = re.compile(r'https://videos\.classplusapp\.com/([a-f0-9]+)/([a-zA-Z0-9]+)\.m3u8')
+                    match = pattern.match(url)
+                    if match:
+                        urlx = f"https://videos.classplusapp.com/b08bad9ff8d969639b2e43d5769342cc62b510c4345d2f7f153bec53be84fe35/{match.group(2)}/{match.group(2)}.m3u8"
+                        url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={urlx}', headers=headers.cp).json()['url']
+                else:
+                    url = requests.get(f'https://api.classplusapp.com/cams/uploader/video/jw-signed-url?url={url}', headers=headers.cp).json()['url']
+            elif '/master.mpd' in url:                
+                id =  url.split("/")[-2] 
+                policy = requests.post('https://api.penpencil.xyz/v1/files/get-signed-cookie', headers=headers.pw, json={'url': f"https://d1d34p8vz63oiq.cloudfront.net/" + id + "/master.mpd"}).json()['data']
+                url = "https://sr-get-video-quality.selav29696.workers.dev/?Vurl=" + "https://d1d34p8vz63oiq.cloudfront.net/" + id + f"/hls/{raw_text2}/main.m3u8" + policy
+                print(url)
+            elif "visionias" in url:
+                async with ClientSession() as session:
+                    async with session.get(url, headers=headers.vision) as resp:
+                        text = await resp.text()
+                        url = re.search(r"(https://*.?playlist.m3u8.?)", text).group(1)
+                        print(url)
 
-            # yt-dlp command
+            name1 = links[i][0].replace("\t", "").replace(":", " ").replace("/", "").replace("+", "").replace("#", "").replace("|", "").replace("@", "").replace("*", "").replace(".", "").replace("https", "").replace("http", "").strip()
+            name = f'{str(count).zfill(3)}){name1[:60]}'
+            
+            # Kalam Publication handling
             if "kalampublication" in url:
-                cmd = (
-                    f'yt-dlp -o "{name}.mp4" "{url}" '
-                    f'--no-check-certificate '
-                    f'--add-header "User-Agent: okhttp/4.12.0" '
-                    f'--add-header "mobilenumber: aDhYejdQcVIyd0IxazlEZg==" '
-                    f'--add-header "referer: https://hello-aws-uat.kalampublication.in"'
-                )
+                ytf = "best"
+                cmd = f'yt-dlp -o "{name}.mp4" "{url}" --add-header "User-Agent: okhttp/4.12.0" --add-header "mobilenumber: aDhYejdQcVIyd0IxazlEZg==" --add-header "referer: https://hello-aws-uat.kalampublication.in"'
             elif "youtu" in url:
                 ytf = f"b[height<={raw_text2}][ext=mp4]/bv[height<={raw_text2}][ext=mp4]+ba[ext=m4a]/b[ext=mp4]"
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
-            elif "jw-prod" in url:
-                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
             else:
                 ytf = f"b[height<={raw_text2}]/bv[height<={raw_text2}]+ba/b/bv+ba"
-                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'
-
-            # Caption
-            cc = (
-                f"╭───────────────⭓\n"
-                f"│ 🚀 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗\n"
-                f"├───────────────\n"
-                f"│ 📌 𝗜𝗗 ➠ `{str(seq).zfill(3)}`\n"
-                f"│ 📖 𝗧𝗶𝘁𝗹𝗲 ➠\n"
-                f"│ ❝ `{name1[:55]}` ❞\n"
-                f"│\n"
-                f"│ 🎥 𝗕𝗮𝘁𝗰𝗵 ➠\n"
-                f"│ ❝ `{b_name}` ❞\n"
-                f"│\n"
-                f"│ 🎬 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 ➠ `{raw_text2}p`\n"
-                f"│ 📡 𝗦𝗼𝘂𝗿𝗰𝗲 ➠ `{app_name}`\n"
-                f"╰───────────────⭓\n\n"
-                f"✨ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 {BRAND}"
-            )
-
+                
+            if "jw-prod" in url:
+                cmd = f'yt-dlp -o "{name}.mp4" "{url}"'
+            elif "kalampublication" not in url:  # Don't override Kalam command
+                cmd = f'yt-dlp -f "{ytf}" "{url}" -o "{name}.mp4"'    
+                
             try:
-                prog = await bot.send_message(
-                    channel_id,
-                    f"╭━━〔 ⬇️ DOWNLOADING 〕━━╮\n"
-                    f"┃ 📌 `{str(seq).zfill(3)}`\n"
-                    f"┃ ❝ `{name1[:45]}` ❞\n"
-                    f"╰━━━━━━━━━━━━━━╯\n\n"
-                    f"⚡ Processing Video...\n\n"
-                    f"👑 {BRAND}",
-                    disable_web_page_preview=True
+                # Custom Stylish UI for Video Details
+                cc = (
+                    f"╭━━━〔 🎓 𝙑𝙄𝘿𝙀𝙊 𝘿𝙀𝙏𝘼𝙄𝙇𝙎 〕━━━╮\n"
+                    f"┃ 🔢 𝙄𝘿 ➠ {str(count).zfill(3)}\n"
+                    f"┃ 📚 𝙏𝙤𝙥𝙞𝙘 ➠ {name1}\n"
+                    f"┃ 🏷️ 𝙏𝙞𝙩𝙡𝙚 ➠ {raw_text2}\n"
+                    f"┃ 📦 𝘽𝙖𝙩𝙘𝙝 ➠ {b_name}\n"
+                    f"┃ 📱 𝘼𝙥𝙥 ➠ {app_name}\n"
+                    f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
+                    f"🎥 𝙁𝙞𝙡𝙚 ➠ {name1} [{raw_text2}].mkv\n\n"
+                    f"⚡ 𝘿𝙤𝙬𝙣 𝘽𝙮 ➠ {MR}"
                 )
 
-                if mpd and keys:
+                # Custom Stylish UI for PDF Details
+                cc1 = (
+                    f"╭━━━〔 📄 𝙋𝘿𝙁 𝘿𝙀𝙏𝘼𝙄𝙇𝙎 〕━━━╮\n"
+                    f"┃ 🔢 𝙄𝘿 ➠ {str(count).zfill(3)}\n"
+                    f"┃ 📚 𝙏𝙤𝙥𝙞𝙘 ➠ {name1}\n"
+                    f"┃ 📦 𝘽𝙖𝙩𝙘𝙝 ➠ {b_name}\n"
+                    f"┃ 📱 𝘼𝙥𝙥 ➠ {app_name}\n"
+                    f"╰━━━━━━━━━━━━━━━━━━━╯\n\n"
+                    f"📄 𝙁𝙞𝙡𝙚 ➠ {name1}.pdf\n\n"
+                    f"⚡ 𝘿𝙤𝙬𝙣 𝘽𝙮 ➠ {MR}"
+                )                 
+
+                if "drive" in url or ".pdf" in url or "pdfs" in url:
+                    try:
+                        cmd = f'yt-dlp -o "{name}.pdf" "{url}"'
+                        download_cmd = f"{cmd} -R 25 --fragment-retries 25"
+                        os.system(download_cmd)
+                        await bot.send_document(chat_id=channel_id, document=f'{name}.pdf', caption=cc1)
+                        count += 1
+                        os.remove(f'{name}.pdf')
+                    except FloodWait as e:
+                        await m.reply_text(str(e))
+                        time.sleep(e.x)
+                        continue
+
+                elif mpd and keys:
+                    Show = (
+                        f"╭━━━〔 ⏳ 𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+                        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+                        f"┃ 🏷️ 𝙌𝙪𝙖𝙡𝙞𝙩𝙮 ➠ `{raw_text2}p`\n"
+                        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n"
+                        f"⏰ Bot Made By 『sargio』"
+                    )
+                    prog = await bot.send_message(channel_id, Show)
                     await helper.download_and_dec_video(mpd, keys, path, name, raw_text2)
                     await prog.delete(True)
-                    sent_msg = await helper.merge_and_send_vid(bot, m, cc, name, prog, path, url, thumb, channel_id)
-                    mpd = None
-                    keys = None
-                elif "kalampublication" in url:
-                    res_file = await helper.download_kalam_video(url, name)
-                    await prog.delete(True)
-                    sent_msg = await helper.send_vid(bot, m, cc, res_file, thumb, name, prog, url, channel_id)
+                    await helper.merge_and_send_vid(bot, m, cc, name, prog, path, url, thumb,channel_id)
+                    count += 1
+                    await asyncio.sleep(0.5)
                 else:
-                    res_file = await helper.download_video(url, cmd, name)
+                    mpd = None
+                    Show = (
+                        f"╭━━━〔 ⏳ 𝘿𝙊𝙒𝙉𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+                        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+                        f"┃ 🏷️ 𝙌𝙪𝙖𝙡𝙞𝙩𝙮 ➠ `{raw_text2}p`\n"
+                        f"╰━━━━━━━━━━━━━━━━━━━━━━━━━━╯\n"
+                        f"⏰ Bot Made By 『sargio』"
+                    )
+                    prog = await bot.send_message(channel_id, Show)
+                    
+                    # Use special function for Kalam videos
+                    if "kalampublication" in url:
+                        res_file = await helper.download_kalam_video(url, name)
+                    else:
+                        res_file = await helper.download_video(url, cmd, name)
+                        
+                    filename = res_file
                     await prog.delete(True)
-                    sent_msg = await helper.send_vid(bot, m, cc, res_file, thumb, name, prog, url, channel_id)
-
-                if sent_msg:
-                    uploaded_topics.append((seq, name1[:60], sent_msg.id))
-
-                seq += 1
-                await asyncio.sleep(0.5)
+                    await helper.send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id)
+                    count += 1
+                    await asyncio.sleep(0.5)
 
             except Exception as e:
-                logging.error(f"Error processing {name}: {e}")
-                seq += 1
                 continue
-
-        # ── Topic Index ────────────────────────────────────────────────────
-        if uploaded_topics:
-            header_text = (
-                f"╭━━〔 📋 BATCH INDEX 〕━━╮\n"
-                f"┃ 🎥 `{b_name}`\n"
-                f"┃ 📡 `{app_name}`\n"
-                f"┃ 🎬 `{raw_text2}p`\n"
-                f"╰━━━━━━━━━━━━━━╯\n"
-            )
-            topic_lines = []
-            for seq_num, topic_name, msg_id in uploaded_topics:
-                link = make_channel_link(channel_id, msg_id)
-                if link:
-                    topic_lines.append(f"`{str(seq_num).zfill(3)}` · [{topic_name}]({link})")
-                else:
-                    topic_lines.append(f"`{str(seq_num).zfill(3)}` · `{topic_name}`")
-
-            chunk = []
-            chunk_chars = 0
-            first_chunk = True
-            for line in topic_lines:
-                if chunk_chars + len(line) > 3500:
-                    text = (header_text if first_chunk else "") + "\n".join(chunk)
-                    await bot.send_message(channel_id, text, disable_web_page_preview=True)
-                    await asyncio.sleep(1)
-                    chunk = []
-                    chunk_chars = 0
-                    first_chunk = False
-                chunk.append(line)
-                chunk_chars += len(line)
-
-            if chunk:
-                text = (header_text if first_chunk else "") + "\n".join(chunk)
-                await bot.send_message(channel_id, text, disable_web_page_preview=True)
-
-        # ── Done ───────────────────────────────────────────────────────────
-        done_text = (
-            f"╭━━〔 ✅ COMPLETED 〕━━╮\n"
-            f"┃ 🎥 `{b_name}`\n"
-            f"┃ 🎬 `{raw_text2}p`\n"
-            f"┃ 📦 `{len(uploaded_topics)}` Videos Uploaded\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"✨ Upload Finished Successfully\n\n"
-            f"👑 {BRAND}"
-        )
         try:
-            await bot.send_message(channel_id, done_text, disable_web_page_preview=True)
+            success_done = (
+                f"╭━━━〔 🌟 𝙎𝙐𝘾𝘾𝙀𝙎𝙎 〕━━━╮\n"
+                f"┃ 🎉 𝘼𝙡𝙡 𝙇𝙚𝙘𝙩𝙪𝙧𝙚𝙨 𝘿𝙤𝙬𝙣𝙡𝙤𝙖𝙙𝙚𝙙!\n"
+                f"╰━━━━━━━━━━━━━━━━━━━━━╯"
+            )
+            await bot.send_message(channel_id, success_done)
         except FloodWait as fw:
             await asyncio.sleep(fw.value)
-            await bot.send_message(channel_id, done_text, disable_web_page_preview=True)
-
+            await bot.send_message(channel_id, success_done)
     except FloodWait as fw:
         await asyncio.sleep(fw.value)
         try:
-            await m.reply_text(f"⚠️ Flood wait hit. Batch may be partially complete.\n\n⬇️ {BRAND}", disable_web_page_preview=True)
-        except Exception:
+            await m.reply_text(f"**⚠️Task Completed with some issues⚠️**")
+        except:
             pass
+        return
     except Exception as e:
-        logging.error(f"Master handler error: {e}")
         try:
-            await m.reply_text(
-                f"╭━━〔 ❌ ERROR OCCURRED 〕━━╮\n"
-                f"┃ ⚠️ Something Went Wrong\n"
-                f"╰━━━━━━━━━━━━━━╯\n\n"
-                f"`{e}`\n\n"
-                f"👑 {BRAND}",
-                disable_web_page_preview=True
-            )
-        except Exception:
+            await m.reply_text(f"**⚠️Sorry Boss⚠️**\n\n**Error occurred, please try again**")
+        except:
             pass
-
-
-# ── /master command ───────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["master"]))
-async def master_handler(client: Client, m: Message):
-    await run_master(client, m, m.from_user.id, m.chat.id)
-
-
-# ── /setproxy ─────────────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["setproxy"]))
-async def setproxy_handler(client: Client, m: Message):
-    if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.from_user.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
-        )
         return
-    parts = m.text.split(maxsplit=1)
-    if len(parts) < 2 or not parts[1].strip():
-        await m.reply_text(
-            f"**Usage:** `/setproxy <proxy_url>`\n\n"
-            f"**Formats:**\n"
-            f"› `http://ip:port`\n"
-            f"› `http://user:pass@ip:port`\n"
-            f"› `socks5://ip:port`\n\n"
-            f"⬇️ {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    proxy_url = parts[1].strip()
-    from config import save_proxy
-    save_proxy(proxy_url)
-    await m.reply_text(
-        f"╭━━〔 🌐 PROXY UPDATED 〕━━╮\n"
-        f"┃ ✅ Proxy Connected Successfully\n"
-        f"╰━━━━━━━━━━━━━━╯\n\n"
-        f"`{proxy_url}`\n\n"
-        f"👑 {BRAND}",
-        disable_web_page_preview=True
-    )
-
-
-# ── /delproxy ─────────────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["delproxy"]))
-async def delproxy_handler(client: Client, m: Message):
-    if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.from_user.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    from config import delete_proxy, load_proxy
-    proxy, _ = load_proxy()
-    if not proxy:
-        await m.reply_text(f"ℹ️ No proxy is currently set.\n\n⬇️ {BRAND}", disable_web_page_preview=True)
-        return
-    delete_proxy()
-    await m.reply_text(f"🗑 **Proxy Removed**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
-
-
-# ── /proxy ────────────────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["proxy"]))
-async def proxy_status_handler(client: Client, m: Message):
-    if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.from_user.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    from config import load_proxy
-    proxy, worker = load_proxy()
-    lines = ["**Kalam Download Status**\n"]
-    lines.append(f"🌐 Worker: `{worker}`" if worker else "🌐 Worker: not set")
-    lines.append(f"📡 Proxy: `{proxy}`" if proxy else "📡 Proxy: not set")
-    lines.append(f"\n**Commands:**")
-    lines.append(f"› `/setworker <url>` — set CF Worker")
-    lines.append(f"› `/setproxy <url>` — set HTTP/SOCKS proxy")
-    lines.append(f"› `/delworker` · `/delproxy` — remove")
-    lines.append(f"\n⬇️ {BRAND}")
-    await m.reply_text("\n".join(lines), disable_web_page_preview=True)
-
-
-# ── /setworker ────────────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["setworker"]))
-async def setworker_handler(client: Client, m: Message):
-    if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.from_user.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    parts = m.text.split(maxsplit=1)
-    if len(parts) < 2 or not parts[1].strip():
-        await m.reply_text(
-            f"**Usage:** `/setworker <cloudflare_worker_url>`\n\n"
-            f"Example:\n`/setworker https://kalam.yourname.workers.dev`\n\n"
-            f"⬇️ {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    from config import save_worker
-    worker_url = parts[1].strip()
-    save_worker(worker_url)
-    await m.reply_text(
-        f"╭━━〔 ☁️ WORKER UPDATED 〕━━╮\n"
-        f"┃ ✅ CF Worker Connected\n"
-        f"╰━━━━━━━━━━━━━━╯\n\n"
-        f"`{worker_url}`\n\n"
-        f"👑 {BRAND}",
-        disable_web_page_preview=True
-    )
-
-
-# ── /delworker ────────────────────────────────────────────────────────────────
-@bot.on_message(filters.command(["delworker"]))
-async def delworker_handler(client: Client, m: Message):
-    if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(
-            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
-            f"┃ 🆔 `{m.from_user.id}`\n"
-            f"┃ 🚫 Premium Access Required\n"
-            f"╰━━━━━━━━━━━━━━╯\n\n"
-            f"👑 {BRAND}",
-            disable_web_page_preview=True
-        )
-        return
-    from config import delete_worker, load_proxy
-    _, worker = load_proxy()
-    if not worker:
-        await m.reply_text(f"ℹ️ No worker is currently set.\n\n⬇️ {BRAND}", disable_web_page_preview=True)
-        return
-    delete_worker()
-    await m.reply_text(f"🗑 **Worker Removed**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
-
 
 bot.run()
