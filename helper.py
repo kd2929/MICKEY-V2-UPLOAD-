@@ -39,7 +39,7 @@ def duration(filename):
 async def download_video(url, cmd, name):
     """Optimized download function with better error handling"""
     # MAXIMUM SPEED download command
-    download_cmd = f'{cmd} --no-part --retries 10 --fragment-retries 25 --concurrent-fragments 20 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -j 64 -k 1M --min-split-size=1M --max-connection-per-server=16 --split=16 --max-concurrent-downloads=64 --file-allocation=none --allow-overwrite=true --summary-interval=0 --max-overall-download-limit=0"'
+    download_cmd = f'{cmd} --no-part --retries 10 --fragment-retries 25 --concurrent-fragments 10 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -k 5M -j 16 --min-split-size=5M --max-concurrent-downloads=16 --file-allocation=none --allow-overwrite=true"'
     
     global failed_counter
     print(f"🚀 Fast Download: {download_cmd}")
@@ -87,7 +87,7 @@ async def download_kalam_video(url, name):
         header_args = " ".join([f'--add-header "{header}"' for header in headers])
         
         # MAXIMUM SPEED download command
-        cmd = f'yt-dlp {header_args} --no-part --retries 5 --fragment-retries 10 --concurrent-fragments 20 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -j 64 -k 1M --min-split-size=1M --max-connection-per-server=16 --split=16 --max-concurrent-downloads=64 --file-allocation=none --allow-overwrite=true --summary-interval=0 --max-overall-download-limit=0" -o "{name}.mp4" "{url}"'
+        cmd = f'yt-dlp {header_args} --no-part --retries 5 --fragment-retries 10 --concurrent-fragments 10 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -k 5M -j 16 --min-split-size=5M --max-concurrent-downloads=16 --file-allocation=none --allow-overwrite=true" -o "{name}.mp4" "{url}"'
         
         print(f"🚀 Turbo Kalam Download: {cmd}")
         logging.info(cmd)
@@ -132,8 +132,8 @@ def time_formatter(seconds):
 
 last_update_time = {}
 
-async def progress_bar(current, total, reply, start_time, name="Unknown"):
-    """Ultra Premium & Stylish Upload Progress Bar with Anti-FloodWait"""
+async def progress_bar(current, total, reply, start_time):
+    """Stylish and Premium Upload Progress Bar with Anti-FloodWait"""
     try:
         now = time.time()
         diff = now - start_time
@@ -154,19 +154,22 @@ async def progress_bar(current, total, reply, start_time, name="Unknown"):
         speed = current / diff
         eta = (total - current) / speed if speed > 0 else 0
         
-        # Create compact progress bar
-        progress = int(percentage / 10) # 10 blocks total for compactness
-        bar = "▰" * progress + "▱" * (10 - progress)
+        # Create stylish progress bar
+        filled_length = int(10 * current // total)
+        bar = '▰' * filled_length + '▱' * (10 - filled_length)
         
-        # Compact & Stylish design
+        # Premium formatted progress update with unified boxes
         progress_text = (
-            f"╭━━〔 📤 **𝙐𝙋𝙇𝙊𝘼𝘿𝙄𝙉𝙂** 〕━━╮\n"
-            f"┃ 📁 `{name[:25]}...`\n"
-            f"┃ 💠 **𝙋𝙧𝙤𝙜𝙧𝙚𝙨𝙨:** `{percentage:.1f}%`\n"
-            f"┃ ⚡ **𝙎𝙥𝙚𝙚𝙙:** `{humanbytes(speed)}/s` \n"
-            f"┃ ⏳ **𝙀𝙏𝘼:** `{time_formatter(eta)}` \n"
+            f"╭━━━〔 📤 𝙐𝙋𝙇𝙊𝘼𝘿𝙄𝙉𝙂 〕━━━╮\n"
+            f"┃ 📊 𝙋𝙧𝙤𝙜𝙧𝙚𝙨𝙨 ➠ `{percentage:.1f}%`\n"
+            f"┃ 📦 𝙎𝙞𝙯𝙚 ➠ `{humanbytes(current)}` / `{humanbytes(total)}`\n"
+            f"┃ ⚡ 𝙎𝙥𝙚𝙚𝙙 ➠ `{humanbytes(speed)}/s`\n"
+            f"┃ ⏱️ 𝙀𝙏𝘼 ➠ `{time_formatter(eta)}`\n"
+            f"┃\n"
             f"┃ [{bar}]\n"
-            f"╰━━━━━━━━━━━━━━━╯"
+            f"┃\n"
+            f"╰━━━━━━━━━━━━━━━━━━━━╯\n\n"
+            f"✨ *Please wait, premium upload is processing...*"
         )
         
         await reply.edit_text(progress_text)
@@ -180,12 +183,12 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
     # Delete progress message immediately
     await prog.delete(True)
     
-    # Send compact starting upload message
+    # Send styled starting upload message
     start_upload_prompt = (
-        f"╭━━〔 🚀 **𝙎𝙏𝘼𝙍𝙏** 〕━━╮\n"
-        f"┃ 🎥 `{name[:25]}...`\n"
-        f"┃ ⚙️ `Preparing...` \n"
-        f"╰━━━━━━━━━━━━━╯"
+        f"╭━━━〔 🚀 𝙎𝙏𝘼𝙍𝙏𝙄𝙉𝙂 𝙐𝙋𝙇𝙊𝘼𝘿 〕━━━╮\n"
+        f"┃ 🎥 𝙉𝙖𝙢𝙚 ➠ `{name}`\n"
+        f"┃ ⚙️ 𝙎𝙩𝙖𝙩𝙪𝙨 ➠ `Preparing assets...`\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━╯\n\n"
     )
     reply = await bot.send_message(channel_id, start_upload_prompt)
     
@@ -226,9 +229,6 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
         return_exceptions=True
     )
     
-    # OPTIMIZE VIDEO FOR FAST UPLOAD
-    filename = await optimize_video_for_upload(filename)
-    
     # UPLOAD WITH OPTIMIZED SETTINGS
     start_time = time.time()
     
@@ -240,7 +240,7 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
             'supports_streaming': True,
             'duration': video_duration,
             'progress': progress_bar,
-            'progress_args': (reply, start_time, name)
+            'progress_args': (reply, start_time)
         }
         
         # Add thumbnail if available
@@ -259,7 +259,7 @@ async def send_vid(bot, m, cc, filename, thumb, name, prog, url, channel_id):
                 video=filename,
                 caption=cc,
                 progress=progress_bar,
-                progress_args=(reply, start_time, name)
+                progress_args=(reply, start_time)
             )
         except Exception as e2:
             logging.error(f"Fallback upload also failed: {e2}")
@@ -288,7 +288,7 @@ async def download_and_dec_video(mpd, keys, path, name, raw_text2):
     os.makedirs(path, exist_ok=True)
     
     # MAXIMUM SPEED download command
-    download_cmd = f'yt-dlp -o "{path}/fileName.%(ext)s" -f "bestvideo[height<={int(raw_text2)}]+bestaudio" --no-part --concurrent-fragments 20 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -j 64 -k 1M --min-split-size=1M --max-connection-per-server=16 --split=16 --max-concurrent-downloads=64 --file-allocation=none --summary-interval=0 --max-overall-download-limit=0" --allow-unplayable-format "{mpd}"'
+    download_cmd = f'yt-dlp -o "{path}/fileName.%(ext)s" -f "bestvideo[height<={int(raw_text2)}]+bestaudio" --no-part --concurrent-fragments 10 --external-downloader aria2c --downloader-args "aria2c: -x 16 -s 16 -k 5M -j 16 --min-split-size=5M --max-concurrent-downloads=16 --file-allocation=none" --allow-unplayable-format "{mpd}"'
     
     print(f"🚀 Fast MPD Download: {download_cmd}")
     subprocess.run(download_cmd, shell=True, timeout=1800)
@@ -338,11 +338,11 @@ async def merge_and_send_vid(bot, m, cc, name, prog, path, url, thumb, channel_i
     # Delete progress message
     await prog.delete(True)
     
-    # Compact Merge Complete Prompt
+    # Premium styled Merge Complete Prompt
     merge_done_prompt = (
-        f"╭━━〔 💿 **𝙈𝙀𝙍𝙂𝙀𝘿** 〕━━╮\n"
-        f"┃ ⚡ `Ready to Upload` \n"
-        f"╰━━━━━━━━━━━━━━╯"
+        f"╭━━━〔 💿 𝙈𝙀𝙍𝙂𝙀 𝘾𝙊𝙈𝙋𝙇𝙀𝙏𝙀 〕━━━╮\n"
+        f"┃ ⚡ *All media elements joined!*\n"
+        f"╰━━━━━━━━━━━━━━━━━━━━━━━━╯"
     )
     
     # Use the optimized send function
