@@ -58,15 +58,15 @@ def override_quality_in_url(url, quality):
 @bot.on_message(filters.command(["start"]))
 async def start_handler(bot: Client, m: Message):
     await m.reply_text(
-        f"✨ **Welcome to Mickey V2**\n\n"
-        f"🚀 Fast · Secure · Premium\n\n"
-        f"**Platforms**\n"
-        f"› PhysicsWallah · ClassPlus · Allen\n"
-        f"› Vision IAS · Kalam · Vimeo · DRM\n\n"
-        f"⬇️ {BRAND}",
+        f"╭━━〔 🚀 MICKEY V2 〕━━╮\n"
+        f"┃ ⚡ Fast • Secure • Premium\n"
+        f"┃ 🎯 Multi Platform Downloader\n"
+        f"╰━━━━━━━━━━━━━━╯\n\n"
+        f"📥 Send TXT File or Links To Start\n\n"
+        f"👑 {BRAND}",
         disable_web_page_preview=True,
         reply_markup=InlineKeyboardMarkup([
-            [InlineKeyboardButton("📥  Start Downloading", callback_data="start_master")]
+            [InlineKeyboardButton("⚡ START DOWNLOADING ⚡", callback_data="start_master")]
         ])
     )
 
@@ -82,10 +82,11 @@ async def start_master_callback(client: Client, cb):
 async def restart_handler(bot, m):
     if m.chat.id not in Config.VIP_USERS:
         await m.reply_text(
-            f"🚫 **Access Denied**\n\n"
-            f"Your ID: `{m.chat.id}`\n"
-            f"Contact admin for access.\n\n"
-            f"⬇️ {BRAND}",
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.chat.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
             disable_web_page_preview=True
         )
         return
@@ -98,17 +99,24 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
     try:
         if user_id not in Config.VIP_USERS:
             await m.reply_text(
-                f"🚫 **Access Denied**\n\n"
-                f"Your ID: `{user_id}`\n\n"
-                f"⬇️ {BRAND}",
+                f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+                f"┃ 🆔 `{user_id}`\n"
+                f"┃ 🚫 Premium Access Required\n"
+                f"╰━━━━━━━━━━━━━━╯\n\n"
+                f"👑 {BRAND}",
                 disable_web_page_preview=True
             )
             return
 
         # ── Step 1: File / URLs ────────────────────────────────────────────
         editable = await m.reply_text(
-            f"📂 **Send your TXT file** or paste URLs\n"
-            f"_Format:_ `Topic Name://URL`"
+            f"╭━━〔 📂 SEND FILE 〕━━╮\n"
+            f"┃ 📄 Upload TXT File\n"
+            f"┃ 🔗 Or Paste URLs\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"✍️ Format:\n"
+            f"`Title://URL`\n\n"
+            f"👑 {BRAND}"
         )
         inp: Message = await bot.listen(editable.chat.id)
 
@@ -143,9 +151,12 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 2: Start number ───────────────────────────────────────────
         await editable.edit(
-            f"🎞️ **{total_videos} videos** found\n\n"
-            f"▸ From which number to start?\n"
-            f"_Send_ `1` _to start from beginning_"
+            f"╭━━〔 🎞️ SCAN COMPLETED 〕━━╮\n"
+            f"┃ 📦 Videos Found ➠ `{total_videos}`\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"⚡ Send Starting Number\n"
+            f"Example ➠ `1`\n\n"
+            f"👑 {BRAND}"
         )
         input0: Message = await bot.listen(editable.chat.id)
         raw_text = input0.text.strip()
@@ -153,8 +164,11 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 3: Batch name ─────────────────────────────────────────────
         await editable.edit(
-            f"🏷️ **Batch Name**\n\n"
-            f"▸ Enter name or `/d` for `{file_name}`"
+            f"╭━━〔 🎥 BATCH SETUP 〕━━╮\n"
+            f"┃ ✏️ Send Batch Name\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"📌 Send `/d` For Default Name\n\n"
+            f"👑 {BRAND}"
         )
         input1: Message = await bot.listen(editable.chat.id)
         raw_text0 = input1.text.strip()
@@ -163,8 +177,14 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 4: App name ───────────────────────────────────────────────
         await editable.edit(
-            f"📱 **Platform / App Name**\n\n"
-            f"▸ Eg: `PhysicsWallah` · `Allen` · `Kalam`"
+            f"╭━━〔 📡 SOURCE SETUP 〕━━╮\n"
+            f"┃ 📱 Send Platform Name\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"Examples:\n"
+            f"`PhysicsWallah`\n"
+            f"`Allen`\n"
+            f"`Kalam`\n\n"
+            f"👑 {BRAND}"
         )
         input111: Message = await bot.listen(editable.chat.id)
         app_name = input111.text.strip()
@@ -172,8 +192,11 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 5: Quality ────────────────────────────────────────────────
         await editable.edit(
-            f"🎬 **Select Quality**\n\n"
-            f"▸ `144` · `240` · `360` · `480` · `720` · `1080`"
+            f"╭━━〔 🎬 QUALITY SETUP 〕━━╮\n"
+            f"┃ 📺 Choose Video Quality\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"`144 • 240 • 360 • 480 • 720 • 1080`\n\n"
+            f"👑 {BRAND}"
         )
         input2: Message = await bot.listen(editable.chat.id)
         raw_text2 = input2.text.strip()
@@ -181,8 +204,11 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 6: Thumbnail ──────────────────────────────────────────────
         await editable.edit(
-            f"🖼️ **Thumbnail URL**\n\n"
-            f"▸ Paste image URL or send `no` to skip"
+            f"╭━━〔 🖼️ THUMBNAIL SETUP 〕━━╮\n"
+            f"┃ 🔗 Send Thumbnail URL\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"❌ Send `no` To Skip\n\n"
+            f"👑 {BRAND}"
         )
         input6: Message = await bot.listen(editable.chat.id)
         thumb = input6.text.strip()
@@ -190,9 +216,13 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Step 7: Destination ────────────────────────────────────────────
         await editable.edit(
-            f"📢 **Upload Destination**\n\n"
-            f"▸ Send Channel ID · Eg: `-1001234567890`\n"
-            f"▸ Or `/d` to upload here"
+            f"╭━━〔 📢 UPLOAD DESTINATION 〕━━╮\n"
+            f"┃ 📡 Send Channel ID\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"Example:\n"
+            f"`-1001234567890`\n\n"
+            f"📥 Send `/d` To Upload Here\n\n"
+            f"👑 {BRAND}"
         )
         input7: Message = await bot.listen(editable.chat.id)
         channel_id = chat_id if "/d" in input7.text else input7.text.strip()
@@ -204,8 +234,13 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
             pass
 
         await editable.edit(
-            f"🚀 **Starting batch...**\n\n"
-            f"🎯 `{b_name}` · 📱 `{app_name}` · 🎬 `{raw_text2}p`",
+            f"╭━━〔 🚀 BATCH STARTED 〕━━╮\n"
+            f"┃ 🎥 `{b_name}`\n"
+            f"┃ 📡 `{app_name}`\n"
+            f"┃ 🎬 `{raw_text2}p`\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"⚡ Initializing Premium Upload Engine...\n\n"
+            f"👑 {BRAND}",
             disable_web_page_preview=True
         )
 
@@ -214,10 +249,13 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
             await bot.send_message(
                 chat_id=channel_id,
                 text=(
-                    f"🚀 **Batch Started**\n\n"
-                    f"🎯 `{b_name}`\n"
-                    f"📱 `{app_name}` · 🎬 `{raw_text2}p` · 🎞️ `{total_videos}` videos\n\n"
-                    f"⬇️ {BRAND}"
+                    f"╭━━〔 🚀 BATCH STARTED 〕━━╮\n"
+                    f"┃ 🎥 `{b_name}`\n"
+                    f"┃ 📡 `{app_name}`\n"
+                    f"┃ 🎬 `{raw_text2}p`\n"
+                    f"╰━━━━━━━━━━━━━━╯\n\n"
+                    f"⚡ Initializing Premium Upload Engine...\n\n"
+                    f"👑 {BRAND}"
                 ),
                 disable_web_page_preview=True
             )
@@ -318,18 +356,31 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
             # Caption
             cc = (
-                f"📌 **ID ⭓** `{str(seq).zfill(3)}`\n"
-                f"📖 **Topic ⭓** {name1[:60]}\n"
-                f"🎥**Batch ⭓** `{b_name}`\n"
-                f"🎬 **Quality ⭓** `{raw_text2}p`\n\n"
-                f"🧑‍💻 **Downloaded By : ** {BRAND}"
+                f"╭───────────────⭓\n"
+                f"│ 🚀 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗗𝗢𝗪𝗡𝗟𝗢𝗔𝗗\n"
+                f"├───────────────\n"
+                f"│ 📌 𝗜𝗗 ➠ `{str(seq).zfill(3)}`\n"
+                f"│ 📖 𝗧𝗶𝘁𝗹𝗲 ➠\n"
+                f"│ ❝ `{name1[:55]}` ❞\n"
+                f"│\n"
+                f"│ 🎥 𝗕𝗮𝘁𝗰𝗵 ➠\n"
+                f"│ ❝ `{b_name}` ❞\n"
+                f"│\n"
+                f"│ 🎬 𝗤𝘂𝗮𝗹𝗶𝘁𝘆 ➠ `{raw_text2}p`\n"
+                f"│ 📡 𝗦𝗼𝘂𝗿𝗰𝗲 ➠ `{app_name}`\n"
+                f"╰───────────────⭓\n\n"
+                f"✨ 𝗣𝗼𝘄𝗲𝗿𝗲𝗱 𝗕𝘆 {BRAND}"
             )
 
             try:
                 prog = await bot.send_message(
                     channel_id,
-                    f"⏳ `#{str(seq).zfill(3)}` — **{name1[:50]}**\n"
-                    f"🎬 `{raw_text2}p` · 📡 `{app_name}`",
+                    f"╭━━〔 ⬇️ DOWNLOADING 〕━━╮\n"
+                    f"┃ 📌 `{str(seq).zfill(3)}`\n"
+                    f"┃ ❝ `{name1[:45]}` ❞\n"
+                    f"╰━━━━━━━━━━━━━━╯\n\n"
+                    f"⚡ Processing Video...\n\n"
+                    f"👑 {BRAND}",
                     disable_web_page_preview=True
                 )
 
@@ -362,9 +413,11 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
         # ── Topic Index ────────────────────────────────────────────────────
         if uploaded_topics:
             header_text = (
-                f"📋 **Index** · `{b_name}`\n"
-                f"📱 `{app_name}` · 🎬 `{raw_text2}p`\n"
-                f"━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"╭━━〔 📋 BATCH INDEX 〕━━╮\n"
+                f"┃ 🎥 `{b_name}`\n"
+                f"┃ 📡 `{app_name}`\n"
+                f"┃ 🎬 `{raw_text2}p`\n"
+                f"╰━━━━━━━━━━━━━━╯\n"
             )
             topic_lines = []
             for seq_num, topic_name, msg_id in uploaded_topics:
@@ -394,9 +447,12 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
 
         # ── Done ───────────────────────────────────────────────────────────
         done_text = (
-            f"✅ **Done!**\n\n"
-            f"🎯 `{b_name}` · 🎬 `{raw_text2}p`\n"
-            f"📹 `{len(uploaded_topics)}` videos uploaded\n\n"
+            f"╭━━〔 ✅ COMPLETED 〕━━╮\n"
+            f"┃ 🎥 `{b_name}`\n"
+            f"┃ 🎬 `{raw_text2}p`\n"
+            f"┃ 📦 `{len(uploaded_topics)}` Videos Uploaded\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"✨ Upload Finished Successfully\n\n"
             f"👑 {BRAND}"
         )
         try:
@@ -414,7 +470,14 @@ async def run_master(bot: Client, m: Message, user_id: int, chat_id: int):
     except Exception as e:
         logging.error(f"Master handler error: {e}")
         try:
-            await m.reply_text(f"❌ `{e}`\n\nPlease try again.\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+            await m.reply_text(
+                f"╭━━〔 ❌ ERROR OCCURRED 〕━━╮\n"
+                f"┃ ⚠️ Something Went Wrong\n"
+                f"╰━━━━━━━━━━━━━━╯\n\n"
+                f"`{e}`\n\n"
+                f"👑 {BRAND}",
+                disable_web_page_preview=True
+            )
         except Exception:
             pass
 
@@ -429,7 +492,14 @@ async def master_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["setproxy"]))
 async def setproxy_handler(client: Client, m: Message):
     if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(f"🚫 **Access Denied**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+        await m.reply_text(
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.from_user.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
+            disable_web_page_preview=True
+        )
         return
     parts = m.text.split(maxsplit=1)
     if len(parts) < 2 or not parts[1].strip():
@@ -447,10 +517,11 @@ async def setproxy_handler(client: Client, m: Message):
     from config import save_proxy
     save_proxy(proxy_url)
     await m.reply_text(
-        f"✅ **Proxy Set**\n\n"
+        f"╭━━〔 🌐 PROXY UPDATED 〕━━╮\n"
+        f"┃ ✅ Proxy Connected Successfully\n"
+        f"╰━━━━━━━━━━━━━━╯\n\n"
         f"`{proxy_url}`\n\n"
-        f"Kalam downloads will now route through this proxy.\n\n"
-        f"⬇️ {BRAND}",
+        f"👑 {BRAND}",
         disable_web_page_preview=True
     )
 
@@ -459,7 +530,14 @@ async def setproxy_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["delproxy"]))
 async def delproxy_handler(client: Client, m: Message):
     if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(f"🚫 **Access Denied**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+        await m.reply_text(
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.from_user.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
+            disable_web_page_preview=True
+        )
         return
     from config import delete_proxy, load_proxy
     proxy, _ = load_proxy()
@@ -474,7 +552,14 @@ async def delproxy_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["proxy"]))
 async def proxy_status_handler(client: Client, m: Message):
     if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(f"🚫 **Access Denied**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+        await m.reply_text(
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.from_user.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
+            disable_web_page_preview=True
+        )
         return
     from config import load_proxy
     proxy, worker = load_proxy()
@@ -493,7 +578,14 @@ async def proxy_status_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["setworker"]))
 async def setworker_handler(client: Client, m: Message):
     if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(f"🚫 **Access Denied**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+        await m.reply_text(
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.from_user.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
+            disable_web_page_preview=True
+        )
         return
     parts = m.text.split(maxsplit=1)
     if len(parts) < 2 or not parts[1].strip():
@@ -508,7 +600,11 @@ async def setworker_handler(client: Client, m: Message):
     worker_url = parts[1].strip()
     save_worker(worker_url)
     await m.reply_text(
-        f"✅ **CF Worker Set**\n\n`{worker_url}`\n\nAll Kalam downloads will route through this worker.\n\n⬇️ {BRAND}",
+        f"╭━━〔 ☁️ WORKER UPDATED 〕━━╮\n"
+        f"┃ ✅ CF Worker Connected\n"
+        f"╰━━━━━━━━━━━━━━╯\n\n"
+        f"`{worker_url}`\n\n"
+        f"👑 {BRAND}",
         disable_web_page_preview=True
     )
 
@@ -517,7 +613,14 @@ async def setworker_handler(client: Client, m: Message):
 @bot.on_message(filters.command(["delworker"]))
 async def delworker_handler(client: Client, m: Message):
     if m.from_user.id not in Config.VIP_USERS:
-        await m.reply_text(f"🚫 **Access Denied**\n\n⬇️ {BRAND}", disable_web_page_preview=True)
+        await m.reply_text(
+            f"╭━━〔 ❌ ACCESS DENIED 〕━━╮\n"
+            f"┃ 🆔 `{m.from_user.id}`\n"
+            f"┃ 🚫 Premium Access Required\n"
+            f"╰━━━━━━━━━━━━━━╯\n\n"
+            f"👑 {BRAND}",
+            disable_web_page_preview=True
+        )
         return
     from config import delete_worker, load_proxy
     _, worker = load_proxy()
