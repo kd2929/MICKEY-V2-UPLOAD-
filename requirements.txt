@@ -7,3 +7,4 @@ pyrogram
 xmltodict 
 requests 
 pycryptodomex
+gunicorn==23.0.0
